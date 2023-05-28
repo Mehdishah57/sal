@@ -5,12 +5,4 @@ class Container {
     public instances: any = {}
 }
 
-
-function Inject() {}
-function Controller() {}
-function GetMapping() {}
-function PostMapping() {}
-function PutMapping() {}
-function DeleteMapping() {}
-
-export default new Container()
+export const container = new Container()

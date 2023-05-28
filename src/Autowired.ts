@@ -1,4 +1,5 @@
-import container from "./main"
+import "reflect-metadata"
+import { container } from "./main"
 
 export function Autowired<T extends {new(...args:any[]):{}}>(constructor: T) {
     if(!container.classes[constructor.name]) {
@@ -8,3 +9,9 @@ export function Autowired<T extends {new(...args:any[]):{}}>(constructor: T) {
         
     }
 }
+
+// const Autowired = (constructor: Function) => {
+    
+// }
+
+// export { Autowired }
