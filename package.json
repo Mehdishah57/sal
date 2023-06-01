@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "npx ts-node src/test.ts"
+    "dev": "npx nodemon src/test.ts"
   },
   "keywords": [],
   "author": "",
@@ -12,6 +12,7 @@
   "devDependencies": {
     "@types/express": "^4.17.17",
     "@types/node": "^20.2.5",
+    "nodemon": "^2.0.22",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.0.4"

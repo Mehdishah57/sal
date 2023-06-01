@@ -1,16 +1,21 @@
 import { Autowired } from "./Autowired";
+import { Service } from "./Service";
 
-interface UserService {
-    getUser: () => string;
+@Service
+class UserService {
+    public async getUser() {
+        return { id: 1, name: "Mehdi" }
+    }
 }
-@Autowired
+
+@Service
 class Test {
     constructor(
         private userService: UserService
     ) {}
 
     public async getUser() {
-        return this.userService.getUser()
+        return await this.userService.getUser()
     }
 }
 
