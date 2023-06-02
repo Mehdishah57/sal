@@ -3,9 +3,18 @@ import Component from "./Component";
 import { container } from "./main";
 
 @Component
-class UserService {
+class UserRepository {
     public async getUser() {
         return { id: 1, name: "Mehdi" }
+    }
+}
+
+@Component
+class UserService {
+    @Autowired private userRepo: UserRepository
+
+    public async getUser() {
+        return await this.userRepo?.getUser()
     }
 }
 
