@@ -1,15 +1,10 @@
 import "reflect-metadata"
 import { container } from "./main"
 
-export function Autowired<T extends {new(...args:any[]):{}}>(constructor: T) {
-    if(!container.classes[constructor.name]) {
-        container.classes[constructor.name] = constructor;
-    }
-    return class extends constructor {}
+const Autowired = (target: Object, propertyKey: string) => {
+    var property = Reflect.getMetadata("design:type", target, propertyKey);
+    const targetClass = container.instances[property.name]
+    target.constructor.prototype[propertyKey] = targetClass;
 }
 
-// const Autowired = (constructor: Function) => {
-    
-// }
-
-// export { Autowired }
+export default Autowired

@@ -1,5 +1,5 @@
 import "reflect-metadata"
-import express, { json } from "express"
+import express from "express"
 
 export interface IClasses {
     [key: string]: Function;
@@ -16,9 +16,7 @@ class Container {
     public dependencies: IDependencies = {}
     public app = express()
 
-    constructor() {
-        this.app.use(json())
-    }
+    constructor() {}
 }
 
 export const container = new Container()

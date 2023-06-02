@@ -1,22 +1,20 @@
-import { Autowired } from "./Autowired";
-import { Service } from "./Service";
+import Autowired from "./Autowired";
+import Component from "./Component";
 import { container } from "./main";
 
-@Service()
+@Component
 class UserService {
     public async getUser() {
         return { id: 1, name: "Mehdi" }
     }
 }
 
-@Service([UserService])
+@Component
 class Test {
-    constructor(
-        private userService: UserService
-    ) {}
+    @Autowired private userService: UserService
 
     public async getUser() {
-        return await this.userService.getUser()
+        return await this.userService?.getUser()
     }
 }
 
