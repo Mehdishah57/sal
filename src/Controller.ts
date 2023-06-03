@@ -17,13 +17,10 @@ const Controller = (route = "/") => <T extends {new(...args:any[]):{}}>(construc
     if(!container.pendingRegisteration[constructor.name]?.length) return;
     
     container.pendingRegisteration[constructor.name].forEach(({ route, handlerName, method }) => {
-        // const handler = container.instances[constructor.name][handlerName]
-        // container.routers[constructor.name][method](route, handler)
-        
         container.routers[constructor.name][method](route, async(req, res, next) => {
             try {
                 const data = await container.instances[constructor.name][handlerName]?.(req, res, next);
-                res.status(200).send(data)
+                if(data) res.status(200).send(data)
             } catch (error) {
                 res.status(400).send({ message: error.message })
             }

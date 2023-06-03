@@ -4,6 +4,7 @@ import Controller from "./Controller";
 import Get from "./Get";
 import { container } from "./main";
 import { Request, Response } from "express"
+import { express } from "./index"
 
 @Component
 class UserRepository {
@@ -21,17 +22,18 @@ class UserService {
     }
 }
 
-@Controller()
+@Controller("/api/user")
 class Test {
     @Autowired private userService: UserService
 
-    @Get()
+    @Get("/:id")
     public async getUser(req: Request, res: Response) {
         const user = await this.userService.getUser()
-        return user
+        return { ...user, idSent: req.params?.id }
     }
 }
 
-container.app.listen(3500, () => console.log("listening at port 3500"))
+const app = express()
+app.listen(3500, () => console.log("listening at port 3500"))
 
 export default Test
