@@ -3,7 +3,7 @@ import Component from "./Component";
 import Controller from "./Controller";
 import Get from "./Get";
 import { container } from "./main";
-import { Request, RequestHandler, Response } from "express"
+import { Request, Response } from "express"
 
 @Component
 class UserRepository {
@@ -25,19 +25,12 @@ class UserService {
 class Test {
     @Autowired private userService: UserService
 
-    constructor() {
-        this.getUser = this.getUser.bind(this)
-    }
-
     @Get()
     public async getUser(req: Request, res: Response) {
         const user = await this.userService.getUser()
-        res.status(200).send(user)
+        return user
     }
 }
-
-// const test: Test = container.instances['Test']
-// test.getUser().then(data => console.log(data))
 
 container.app.listen(3500, () => console.log("listening at port 3500"))
 
