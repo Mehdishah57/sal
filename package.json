@@ -1,11 +1,13 @@
 {
-  "name": "sal",
-  "version": "1.0.0",
+  "name": "@mehdishah/sal",
+  "version": "1.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "dev": "npx nodemon src/test.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "prepare": "npm run build"
   },
   "keywords": [],
   "author": "",
@@ -21,5 +23,6 @@
   "dependencies": {
     "express": "^4.18.2",
     "reflect-metadata": "^0.1.13"
-  }
+  },
+  "files": ["dist/**/*"]
 }
