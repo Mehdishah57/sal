@@ -4,7 +4,8 @@ export const Service = <T extends {new(...args:any[]):{}}>(dependencies?: T[]) =
     if(!container.classes[constructor.name]) {
         container.classes[constructor.name] = constructor;
         if(dependencies?.length) {
-            container.instances[constructor.name] = new constructor(...dependencies.map(dependency => new dependency()));
+            const constructorDeps = dependencies.map(dependency => container.instances[dependency.name]);
+            container.instances[constructor.name] = new constructor(...constructorDeps);
         }
         else container.instances[constructor.name] = new constructor();
     }
