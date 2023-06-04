@@ -17,8 +17,8 @@ const Controller = (route = "/") => <T extends {new(...args:any[]):{}}>(construc
         throw new Error(`You must initialize container express app before using @Controller.
         \ncont app = express();
         \ncontainer.app = app;
-        \nhere goes all your controller imports
-        \nJust make sure to put controller imports before setting container.app = app;\n`)
+        \n{ here goes all your controller imports }
+        \nJust make sure to put controller imports after setting container.app = app;\n`)
     }
 
     // Resgister all pending registration routes for controller if available
