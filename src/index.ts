@@ -9,11 +9,8 @@ import Put from './Put';
 import Patch from './Patch';
 import Delete from './Delete';
 
-const express = () => container.app;
-
 export {
     container,
-    express,
     Autowired,
     Controller,
     Component,

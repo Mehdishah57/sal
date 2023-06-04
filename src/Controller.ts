@@ -11,7 +11,15 @@ const Controller = (route = "/") => <T extends {new(...args:any[]):{}}>(construc
     container.routers[constructor.name] = Router(); 
 
     // Register route in express app
-    container.app.use(route, container.routers[constructor.name])
+    try {
+        container.app.use(route, container.routers[constructor.name])
+    } catch (error) {
+        throw new Error(`You must initialize container express app before using @Controller.
+        \ncont app = express();
+        \ncontainer.app = app;
+        \nhere goes all your controller imports
+        \nJust make sure to put controller imports before setting container.app = app;\n`)
+    }
 
     // Resgister all pending registration routes for controller if available
     if(!container.pendingRegisteration[constructor.name]?.length) return;
