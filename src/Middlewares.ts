@@ -9,8 +9,11 @@ const Middlewares = (...handlers: RequestHandler[]) => <T extends ({new(...args:
         container.middlewares[(constructor as T).name][MiddlewareScope.CONTROLLER].handlers.push(...handlers)
     }
     else if(propertyKey && descriptor) {
-        const target = constructor as V;
-        
+        const constructorName = (constructor as V).constructor.name;
+        const handlerName = propertyKey;
+        container.middlewares[constructorName] = container.middlewares[constructorName] || {};
+        container.middlewares[constructorName][handlerName] = container.middlewares[constructorName]?.[handlerName] || { handlers: [] }
+        container.middlewares[constructorName][handlerName].handlers.push(...handlers)
     }
 }
 

@@ -14,13 +14,9 @@ export interface IRouters {
 }
 
 export interface IMiddleware {
-    // [key: string]: {
-    //     scope: MiddlewareScope,
-    //     handlers: RequestHandler[]
-    // }[];
     [key: string]: {
         [scope: string]: {
-            handlers: RequestHandler[]
+            handlers: RequestHandler[];
         }
     }
 }
