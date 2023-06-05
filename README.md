@@ -99,3 +99,41 @@ class UserController {
 
 export default UserController
 ```
+
+As for middlewares, you can apply them to Controllers or handlers / methods of controllers like this.
+
+```ts
+const permission: RequestHandler = (req, res, next) => {
+    console.log("passing permission check")
+    next()
+}
+const logger: RequestHandler = (req, res, next) => {
+    console.log(req.baseUrl)
+    next()
+}
+const auth: RequestHandler = (req, res, next) => {
+    console.log("passing user authentication")
+    next()
+}
+
+@Controller("/api/users")
+@Middlewares(logger)
+class Test {
+    @Autowired private userService: UserService
+
+    @Get("/")
+    @Middlewares(auth, permission)
+    public async getUser(req: Request, res: Response) {
+        const user = await this.userService.getUser()
+        return user
+    }
+}
+```
+
+These are normal express middlewares and can have customized implementation as per your needs.
+To be straight forward, you can pass your existing middlewares to @Middleware decorator
+and apply it to either methods / controllers.
+For global middlwares, you can simple use 
+```ts
+app.use(/* add middlewares to express app */)
+```
