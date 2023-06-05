@@ -1,4 +1,5 @@
-import { Router } from "express";
+import { RequestHandler, Router } from "express";
+import { MiddlewareScope } from "./constants";
 
 export interface IClasses {
     [key: string]: Function;
@@ -10,6 +11,18 @@ export interface IRoutes {
 
 export interface IRouters {
     [key: string]: Router;
+}
+
+export interface IMiddleware {
+    // [key: string]: {
+    //     scope: MiddlewareScope,
+    //     handlers: RequestHandler[]
+    // }[];
+    [key: string]: {
+        [scope: string]: {
+            handlers: RequestHandler[]
+        }
+    }
 }
 
 export interface IPendingRegisteration {

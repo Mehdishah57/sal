@@ -1,6 +1,6 @@
 import "reflect-metadata"
 import { Express } from "express"
-import { IClasses, IPendingRegisteration, IRouters, IRoutes } from "./types"
+import { IClasses, IMiddleware, IPendingRegisteration, IRouters, IRoutes } from "./types"
 
 class Container {
     public controllers: IClasses = {}
@@ -8,6 +8,7 @@ class Container {
     public instances: any = {}
     public routes: IRoutes = {}
     public routers: IRouters = {}
+    public middlewares: IMiddleware = {}
     public pendingRegisteration: IPendingRegisteration = {}
     private _app: Express;
 

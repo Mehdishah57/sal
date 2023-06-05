@@ -1,6 +1,7 @@
 import { Router } from "express"
 import { container } from "./main"
 import Component from "./Component"
+import { MiddlewareScope } from "./constants";
 
 const Controller = (route = "/") => <T extends {new(...args:any[]):{}}>(constructor: T) => {
     // Register constroller as a component
@@ -12,8 +13,14 @@ const Controller = (route = "/") => <T extends {new(...args:any[]):{}}>(construc
 
     // Register route in express app
     try {
-        container.app.use(route, container.routers[constructor.name])
+        // console.log(container.middlewares)
+        container.app.use(
+            route, 
+            ...(container.middlewares?.[constructor.name]?.[MiddlewareScope.CONTROLLER]?.handlers?.map?.((handlers) =>  handlers) || []),
+            container.routers[constructor.name]
+        )
     } catch (error) {
+        console.error(error)
         throw new Error(`You must initialize container express app before using @Controller.
         \ncont app = express();
         \ncontainer.app = app;
