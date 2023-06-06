@@ -5,10 +5,12 @@ To beign, you can create an express app just like you would do normally with an 
 
 ```ts
 import express from "express"
-import { container } from "@mehdishah/sal"
+import { container } from "sal-core"
 
 const app = express()
 container.app = app; // This step is needed to use Controllers. However, it isn't needed for DI Injections.
+
+/* controller imports should go here later */
 
 const PORT = process.env.PORT || 3600
 app.listen(PORT, () => console.log(`server at ${PORT}`))
@@ -20,7 +22,7 @@ but now, instead of doing that, all you have to do is import @Controller and @Ge
 and make a controller like this:
 
 ```ts
-import { Controller, Get } from "@mehdishah/sal";
+import { Controller, Get } from "sal-core";
 import { Request, Response } from "express";
 
 @Controller("/api/user")
@@ -37,8 +39,6 @@ export default UserController
 make sure to import this in main.app.ts like this
 
 ```ts
-
-
 import "./user/user.controller"
 ```
 
@@ -51,7 +51,7 @@ Here is a example for how would development flow go with this library
 
 user.repository.ts
 ```ts
-import { Component } from "@mehdishah/sal"
+import { Component } from "sal-core"
 
 @Component
 class UserRepository {
@@ -65,7 +65,7 @@ export default UserRepository
 
 user.service.ts
 ```ts
-import { Autowired, Component } from "@mehdishah/sal";
+import { Autowired, Component } from "sal-core";
 import UserRepository from "./user.repository";
 
 @Component
@@ -82,7 +82,7 @@ export default UserService
 
 user.controller.ts
 ```ts
-import { Autowired, Controller, Get } from "@mehdishah/sal";
+import { Autowired, Controller, Get } from "sal-core";
 import { Request, Response } from "express";
 import UserService from "./user.service";
 
@@ -99,6 +99,8 @@ class UserController {
 
 export default UserController
 ```
+
+# Middlewares:
 
 As for middlewares, you can apply them to Controllers or handlers / methods of controllers like this.
 
@@ -137,3 +139,42 @@ For global middlwares, you can simple use
 ```ts
 app.use(/* add middlewares to express app */)
 ```
+
+# Circular Dependencies:
+
+In case of circular dependencies, you will notice that @Autowired will throw a BeanCurrentlyInCreationException.
+If you ever come across such a case, where you just have to manage circular dependencies, use @Lazy("type:string").
+
+here is an example:
+
+user.service.ts
+```ts
+@Component
+class UserService {
+    @Autowired private userRepo: UserRepository
+
+    public async getUser() {
+        return await this.userRepo.getUser()
+    }
+}
+
+export default UserService
+```
+
+user.repository.ts
+```ts
+
+@Component
+class UserRepository {
+    @Lazy("UserService") private userService: UserService
+    
+    public async getUser() {
+        return { id: 1, name: "Mehdi" }
+    }
+}
+
+export default UserRepository
+```
+
+Please bear in mind, to pass a correct type to lazy, else its a big problem. You will be stuck in timeout loop forever.
+Secondly, use @Lazy() on class, that is executed later.

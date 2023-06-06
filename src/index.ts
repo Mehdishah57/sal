@@ -9,6 +9,7 @@ import Put from './Put';
 import Patch from './Patch';
 import Delete from './Delete';
 import Middlewares from "./Middlewares";
+import Lazy from "./Lazy";
 
 export {
     container,
@@ -21,5 +22,6 @@ export {
     Put,
     Patch,
     Delete,
-    Middlewares
+    Middlewares,
+    Lazy
 }
