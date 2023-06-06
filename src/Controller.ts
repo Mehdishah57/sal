@@ -38,7 +38,12 @@ const Controller = (route = "/") => <T extends {new(...args:any[]):{}}>(construc
                 const data = await container.instances[constructor.name][handlerName]?.(req, res, next);
                 if(data) res.status(200).send(data)
             } catch (error) {
-                res.status(400).send({ message: error.message })
+                try {
+                    const { message, status } = JSON.parse(error.message)
+                    res.status(status).send({ message })
+                } catch (error) {
+                    res.status(500).send({ message: "Internal Server Error" })
+                }
             }
         })
     })

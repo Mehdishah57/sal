@@ -1,5 +1,4 @@
 import { RequestHandler, Router } from "express";
-import { MiddlewareScope } from "./constants";
 
 export interface IClasses {
     [key: string]: Function;

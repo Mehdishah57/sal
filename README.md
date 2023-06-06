@@ -177,4 +177,78 @@ export default UserRepository
 ```
 
 Please bear in mind, to pass a correct type to lazy, else its a big problem. You will be stuck in timeout loop forever.
-Secondly, use @Lazy() on class, that is executed later.
+Secondly, use @Lazy() inside class, that is executed later.
+
+# Exceptions
+
+Exceptions can be handy, and you can control status codes, with messages that are thrown.
+you can throw these exceptions in controllers, services or repositories.
+It is not recommended to thorw these in middlewares because they currently don't have support for handling them.
+
+1. BadRequestException
+2. NotFoundException
+3. UnauthorizedException
+4. ForbiddenException
+5. CustomException
+
+```ts
+import { BadRequestException } from 'sal-core'
+
+// Throws error with status 404 and message passed to its constructor.
+throw new BadRequestException("something was bad")
+```
+
+You can expect this response when above exception is thrown:
+
+```ts
+// It will have a status code of 400
+{ message: "something was bad" }
+```
+
+As for CustomException, you have to pass both `message` and `status` as constructor parameters.
+thus giving you control over status code as well.
+
+```ts
+import { CustomException } from 'sal-core'
+
+throw new CustomException("something was wrong", 400)
+```
+
+
+# Container Api
+
+The di-container exposes following properties. Try not to mess with them.
+
+## container.classes
+
+Classes property has all the non-instantiated class-constructors stored in them that were collected by either
+@Controller or @Component decorators.
+
+## container.instances
+
+Instances property has all the instantiated class-constructors stored in them that were collected by
+@Controller or @Component decorators.
+
+## container.app
+
+App is the default express app, that you can supply to use @Controller, @Get, @Post, @Put, @Patch & @Delete
+as shown in example above.
+
+## container.routers
+
+@Controller decorator, registers an express router like this:
+```ts 
+const router = Router()
+```
+and that particular router, is stored against the name of container class as a hashmap like this:
+
+```ts
+@Controller("/api/products")
+class ProductController {}
+```
+
+hashmap will look like this:
+
+```ts
+{ ProductController: [Function: router] { /* This router was registered by @Controller */ } }
+```

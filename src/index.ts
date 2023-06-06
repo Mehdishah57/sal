@@ -10,6 +10,11 @@ import Patch from './Patch';
 import Delete from './Delete';
 import Middlewares from "./Middlewares";
 import Lazy from "./Lazy";
+import BadRequestException from './exceptions/BadRequestException';
+import NotFoundException from './exceptions/NotFoundException';
+import UnauthorizedException from './exceptions/UnauthorizedException';
+import ForbiddenException from './exceptions/ForbiddenException';
+import CustomException from './exceptions/CustomException';
 
 export {
     container,
@@ -23,5 +28,10 @@ export {
     Patch,
     Delete,
     Middlewares,
-    Lazy
+    Lazy,
+    BadRequestException,
+    NotFoundException,
+    UnauthorizedException,
+    ForbiddenException,
+    CustomException
 }
