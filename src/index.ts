@@ -8,6 +8,7 @@ import Post from './Post';
 import Put from './Put';
 import Patch from './Patch';
 import Delete from './Delete';
+import Middlewares from "./Middlewares";
 
 export {
     container,
@@ -20,4 +21,5 @@ export {
     Put,
     Patch,
     Delete,
+    Middlewares
 }
