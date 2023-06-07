@@ -46,7 +46,7 @@ import "./user/user.controller"
 isn't it awesome?
 
 Now that isn't it, this library was mainly designed to be a lightweight singleton dependency injection library.
-Therefore, you can as of now, make property injections & even constructor injections (not recommended yet).
+Therefore, you can as of now, make property injections & constructor injections.
 
 Here is a example for how would development flow go with this library
 
@@ -71,7 +71,10 @@ import UserRepository from "./user.repository";
 
 @Component
 class UserService {
-    @Autowired private userRepo: UserRepository
+    @Autowired private userRepo: UserRepository // This is a Property Injection
+    constructor(private readonly userRepo: UserRepository) {} // This is a constructor injection
+
+    /* Constructor injections are performed automatically if class is marked as Component */
 
     public async getUser() {
         return await this.userRepo.getUser() 
@@ -83,13 +86,13 @@ export default UserService
 
 user.controller.ts
 ```ts
-import { Autowired, Controller, GetMapping } from "sal-core";
+import { Controller, GetMapping } from "sal-core";
 import { Request, Response } from "express";
 import UserService from "./user.service";
 
 @Controller("/api/user")
 class UserController {
-    @Autowired private userService: UserService
+    constructor(private readonly userService: UserService) {}
 
     @GetMapping("/:id")
     public async getUser(req: Request, res: Response) {
@@ -122,7 +125,7 @@ const auth: RequestHandler = (req, res, next) => {
 @Controller("/api/users")
 @Middlewares(logger)
 class Test {
-    @Autowired private userService: UserService
+    constructor(private readonly userService: UserService) {}
 
     @GetMapping("/")
     @Middlewares(auth, permission)
@@ -143,7 +146,7 @@ app.use(/* add middlewares to express app */)
 
 # Circular Dependencies:
 
-In case of circular dependencies, you will notice that @Autowired will throw a BeanCurrentlyInCreationException.
+In case of circular dependencies, you will notice that circular property that gets executed first will be undefined
 If you ever come across such a case, where you just have to manage circular dependencies, use @Lazy("type:string").
 
 here is an example:
@@ -152,7 +155,7 @@ user.service.ts
 ```ts
 @Component
 class UserService {
-    @Autowired private userRepo: UserRepository
+    constructor(private readonly userRepo: UserRepository) {}
 
     public async getUser() {
         return await this.userRepo.getUser()
@@ -164,10 +167,29 @@ export default UserService
 
 user.repository.ts
 ```ts
-
 @Component
 class UserRepository {
     @Lazy("UserService") private userService: UserService
+
+    constructor(userService: UserService) {
+        this.userService = userService
+    }
+    
+    public async getUser() {
+        return { id: 1, name: "Mehdi" }
+    }
+}
+
+export default UserRepository
+```
+
+OR
+
+user.repository.ts
+```ts
+@Component
+class UserRepository {
+    constructor(@Lazy("UserService", "userService") private userService: UserService) {}
     
     public async getUser() {
         return { id: 1, name: "Mehdi" }
@@ -178,7 +200,7 @@ export default UserRepository
 ```
 
 @Lazy is fully safe to use now, but it is good to refactor sometimes because circular dependency can also come from a
-poort design.
+poor design.
 
 # Exceptions
 
@@ -238,7 +260,7 @@ Now you can inject it like this:
 ```ts
 @Component
 class UserRepository {
-    @Autowired private dataSource: DataSource
+    constructor(private readonly dataSource: DataSource) {}
 
     // Use it as you like
 }
