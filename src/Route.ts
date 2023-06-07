@@ -1,12 +1,12 @@
 import { container } from "./main";
 
-const Route = (method: string) => (route = "") => (target: Object, propertyKey: string, descriptor: PropertyDescriptor) => {
+const Route = (method: "get" | "post" | "delete" | "put" | "patch") => (route = "") => (target: Object, propertyKey: string, descriptor: PropertyDescriptor) => {
     // Add route with handler to pending registration list against constructor name
     if(!container.pendingRegisteration[target.constructor.name]) container.pendingRegisteration[target.constructor.name] = [];
     container.pendingRegisteration[target.constructor.name].push({
         route,
         handlerName: propertyKey,
-        method: "get"
+        method
     });
 }
 
