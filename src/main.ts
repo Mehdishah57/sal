@@ -1,6 +1,6 @@
 import "reflect-metadata"
 import { Express } from "express"
-import { IClasses, IMiddleware, IPendingRegisteration, IRouters, IRoutes } from "./types"
+import { IClasses, ILazyPeople, IMiddleware, IPendingRegisteration, IRouters, IRoutes } from "./types"
 
 class Container {
     public controllers: IClasses = {}
@@ -10,7 +10,7 @@ class Container {
     public routers: IRouters = {}
     public middlewares: IMiddleware = {}
     public pendingRegisteration: IPendingRegisteration = {}
-    public lazyPeople: any = {}
+    public lazyPeople: ILazyPeople = {}
     private _app: Express;
 
     public set app(theApp: Express) {
@@ -23,6 +23,11 @@ class Container {
 
     constructor(app?: Express) {
         this.app = app;
+    }
+
+    public set<T extends {new(...args:any[]):{}}>(constructor: T, instance: Object) {
+        this.classes[constructor.name] = constructor
+        this.instances[constructor.name] = instance
     }
 }
 

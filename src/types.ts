@@ -27,3 +27,10 @@ export interface IPendingRegisteration {
         method: "get" | "post" | "delete" | "put" | "patch";
    }[];
 }
+
+export interface ILazyPeople {
+    [key: string]: {
+        classToInjectIn: string;
+        property: string;
+    }
+}

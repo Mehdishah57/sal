@@ -220,6 +220,30 @@ throw new CustomException("something was wrong", 400)
 
 The di-container exposes following properties. Try not to mess with them.
 
+## container.set
+
+This is a method that you can manually use to set an instance against a class,
+so when that class type is @Autowired, that instance will be injected to it automatically.
+
+```ts
+import { DataSource } from "typeorm"
+import { container } from "sal-core"
+
+const dataSource = new DataSoruce({ /* options go here */ })
+container.set(DataSource, dataSource);
+```
+
+Now you can inject it like this:
+
+```ts
+@Component
+class UserRepository {
+    @Autowired private dataSource: DataSource
+
+    // Use it as you like
+}
+```
+
 ## container.classes
 
 Classes property has all the non-instantiated class-constructors stored in them that were collected by either
