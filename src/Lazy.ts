@@ -1,11 +1,8 @@
 import { container } from "./main";
 
 const Lazy = (type: string) => (target: Object, propertyKey: string) => {
-    const instance = container.instances[type]
-    if(!instance) setTimeout(() => Lazy(type)(target, propertyKey), 1000);
-    else {
-        target.constructor.prototype[propertyKey] = instance;
-    }
+    container.lazyPeople[type] = { ...container.lazyPeople, classToInjectIn: target.constructor.name, property: propertyKey }
+    target.constructor.prototype[propertyKey] = undefined;
 }
 
 export default Lazy

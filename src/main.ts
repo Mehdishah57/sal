@@ -10,6 +10,7 @@ class Container {
     public routers: IRouters = {}
     public middlewares: IMiddleware = {}
     public pendingRegisteration: IPendingRegisteration = {}
+    public lazyPeople: any = {}
     private _app: Express;
 
     public set app(theApp: Express) {

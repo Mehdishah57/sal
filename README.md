@@ -18,16 +18,17 @@ app.listen(PORT, () => console.log(`server at ${PORT}`))
 
 This will get a basic app started over just like you do in express.
 Now normally, you would create routers, and controllers in traditional way and register them
-but now, instead of doing that, all you have to do is import @Controller and @Get @Post ...etc mappings
+but now, instead of doing that, all you have to do is import @Controller and mappings:
+@GetMapping, @PostMapping, @PutMapping, @PatchMapping, @DeleteMapping
 and make a controller like this:
 
 ```ts
-import { Controller, Get } from "sal-core";
+import { Controller, GetMapping } from "sal-core";
 import { Request, Response } from "express";
 
 @Controller("/api/user")
 class UserController {
-    @Get("/:id")
+    @GetMapping("/:id")
     public async getUser(req: Request, res: Response) {
         res.status(200).send({ id: 1, name: "sal" })   
     }
@@ -82,7 +83,7 @@ export default UserService
 
 user.controller.ts
 ```ts
-import { Autowired, Controller, Get } from "sal-core";
+import { Autowired, Controller, GetMapping } from "sal-core";
 import { Request, Response } from "express";
 import UserService from "./user.service";
 
@@ -90,7 +91,7 @@ import UserService from "./user.service";
 class UserController {
     @Autowired private userService: UserService
 
-    @Get("/:id")
+    @GetMapping("/:id")
     public async getUser(req: Request, res: Response) {
         const user = await this.userService.getUser()
         res.status(200).send({ ...user, params: req.params, query: req.query })   
@@ -123,7 +124,7 @@ const auth: RequestHandler = (req, res, next) => {
 class Test {
     @Autowired private userService: UserService
 
-    @Get("/")
+    @GetMapping("/")
     @Middlewares(auth, permission)
     public async getUser(req: Request, res: Response) {
         const user = await this.userService.getUser()
@@ -176,8 +177,8 @@ class UserRepository {
 export default UserRepository
 ```
 
-Please bear in mind, to pass a correct type to lazy, else its a big problem. You will be stuck in timeout loop forever.
-Secondly, use @Lazy() inside class, that is executed later.
+@Lazy is fully safe to use now, but it is good to refactor sometimes because circular dependency can also come from a
+poort design.
 
 # Exceptions
 
