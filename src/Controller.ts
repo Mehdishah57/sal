@@ -32,7 +32,7 @@ const Controller = (route = "/") => <T extends {new(...args:any[]):{}}>(construc
     if(!container.pendingRegisteration[constructor.name]?.length) return;
     
     container.pendingRegisteration[constructor.name].forEach(({ route, handlerName, method }) => {
-        const middlewares = container.middlewares[constructor.name][handlerName]?.handlers || []
+        const middlewares = container.middlewares[constructor.name]?.[handlerName]?.handlers || []
         container.routers[constructor.name][method](route, ...middlewares, async(req, res, next) => {
             try {
                 const data = await container.instances[constructor.name][handlerName]?.(req, res, next);
