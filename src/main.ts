@@ -1,12 +1,10 @@
 import "reflect-metadata"
 import { Express } from "express"
-import { IClasses, ILazyPeople, IMiddleware, IPendingRegisteration, IRouters, IRoutes } from "./types"
+import { IClasses, ILazyPeople, IMiddleware, IPendingRegisteration, IRouters } from "./types"
 
 class Container {
-    public controllers: IClasses = {}
     public classes: IClasses = {}
     public instances: any = {}
-    public routes: IRoutes = {}
     public routers: IRouters = {}
     public middlewares: IMiddleware = {}
     public pendingRegisteration: IPendingRegisteration = {}
@@ -28,6 +26,10 @@ class Container {
     public set<T extends {new(...args:any[]):{}}>(constructor: T, instance: Object) {
         this.classes[constructor.name] = constructor
         this.instances[constructor.name] = instance
+    }
+
+    public get<T>(classType: { new (): T }): T {
+        return this.instances[classType?.name]
     }
 }
 

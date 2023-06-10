@@ -4,10 +4,6 @@ export interface IClasses {
     [key: string]: Function;
 }
 
-export interface IRoutes {
-    [key: string]: string;
-}
-
 export interface IRouters {
     [key: string]: Router;
 }

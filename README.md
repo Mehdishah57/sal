@@ -242,7 +242,7 @@ throw new CustomException("something was wrong", 400)
 
 The di-container exposes following properties. Try not to mess with them.
 
-## container.set
+## container.set - container.get
 
 This is a method that you can manually use to set an instance against a class,
 so when that class type is @Autowired, that instance will be injected to it automatically.
@@ -253,6 +253,7 @@ import { container } from "sal-core"
 
 const dataSource = new DataSoruce({ /* options go here */ })
 container.set(DataSource, dataSource);
+const dataSource = container.get(DataSource) // It will return the data source instance
 ```
 
 Now you can inject it like this:

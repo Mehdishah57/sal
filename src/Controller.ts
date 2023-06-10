@@ -8,12 +8,10 @@ const Controller = (route = "/") => <T extends {new(...args:any[]):{}}>(construc
     Component(constructor);
 
     // Register route for component
-    container.routes[constructor.name] = route;
     container.routers[constructor.name] = Router(); 
 
     // Register route in express app
     try {
-        // console.log(container.middlewares)
         container.app.use(
             route, 
             ...(container.middlewares?.[constructor.name]?.[MiddlewareScope.CONTROLLER]?.handlers?.map?.((handlers) =>  handlers) || []),
