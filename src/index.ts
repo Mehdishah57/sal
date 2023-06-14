@@ -10,6 +10,7 @@ import UnauthorizedException from './exceptions/UnauthorizedException';
 import ForbiddenException from './exceptions/ForbiddenException';
 import CustomException from './exceptions/CustomException';
 import { GetMapping, DeleteMapping, PatchMapping, PostMapping, PutMapping } from "./Route";
+import { Body, Req, Res } from './ParamDec';
 
 export {
     container,
@@ -27,5 +28,8 @@ export {
     DeleteMapping,
     PatchMapping,
     PostMapping,
-    PutMapping
+    PutMapping,
+    Body,
+    Req,
+    Res
 }

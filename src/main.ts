@@ -1,6 +1,6 @@
 import "reflect-metadata"
 import { Express } from "express"
-import { IClasses, ILazyPeople, IMiddleware, IPendingRegisteration, IRouters } from "./types"
+import { IClasses, ILazyPeople, IMiddleware, IPendingRegisteration, IRequestHandlerParams, IRouters } from "./types"
 
 class Container {
     public classes: IClasses = {}
@@ -9,6 +9,8 @@ class Container {
     public middlewares: IMiddleware = {}
     public pendingRegisteration: IPendingRegisteration = {}
     public lazyPeople: ILazyPeople = {}
+    public requestHandlerParams: IRequestHandlerParams = {}
+    public validate: any = (instance: any) => {}
     private _app: Express;
 
     public set app(theApp: Express) {

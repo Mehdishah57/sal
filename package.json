@@ -1,6 +1,6 @@
 {
   "name": "sal-core",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -28,5 +28,7 @@
     "express": "^4.18.2",
     "reflect-metadata": "^0.1.13"
   },
-  "files": ["dist/**/*"]
+  "files": [
+    "dist/**/*"
+  ]
 }

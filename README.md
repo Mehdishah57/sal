@@ -104,6 +104,61 @@ class UserController {
 export default UserController
 ```
 
+# Validation using class-validator
+
+For class-validators validations to work, you have to add validateOrReject method to to container like this:
+
+```ts
+import express from "express"
+import { container } from "sal-core"
+import { validateOrReject } from "class-validator"
+
+const app = express()
+container.app = app;
+container.validate = validateOrReject
+
+/* controller imports should go here later */
+
+const PORT = process.env.PORT || 3600
+app.listen(PORT, () => console.log(`server at ${PORT}`))
+```
+
+now you can perform validations in controllers via following decorator:
+```ts
+    class LoginDto {
+        @IsString()
+        email: string;
+        @IsString()
+        password: string;
+    }
+
+    @PostMapping()
+    async test(@Body body: LoginDto) {
+        return { ...body, url: req?.url }
+    }
+```
+
+And yes, thats all you have to do, body will automatically be validated against LoginDto.
+for errors you'll get one error as below with 400 status code. 
+```ts
+{ message: string }
+```
+
+Now you'll be thinking how will i access req & res objects in this handlers since that seem to be lost,
+We have following additonal decorators as well to manage it:
+
+1. Req (injects request object)
+
+```ts
+@Req req: Request
+```
+
+2. Res (injects response object)
+
+```ts
+@Res res: Response
+```
+
 # Middlewares:
 
 As for middlewares, you can apply them to Controllers or handlers / methods of controllers like this.
@@ -237,7 +292,6 @@ import { CustomException } from 'sal-core'
 throw new CustomException("something was wrong", 400)
 ```
 
-
 # Container Api
 
 The di-container exposes following properties. Try not to mess with them.
@@ -267,36 +321,7 @@ class UserRepository {
 }
 ```
 
-## container.classes
-
-Classes property has all the non-instantiated class-constructors stored in them that were collected by either
-@Controller or @Component decorators.
-
-## container.instances
-
-Instances property has all the instantiated class-constructors stored in them that were collected by
-@Controller or @Component decorators.
-
 ## container.app
 
 App is the default express app, that you can supply to use @Controller, @Get, @Post, @Put, @Patch & @Delete
 as shown in example above.
-
-## container.routers
-
-@Controller decorator, registers an express router like this:
-```ts 
-const router = Router()
-```
-and that particular router, is stored against the name of container class as a hashmap like this:
-
-```ts
-@Controller("/api/products")
-class ProductController {}
-```
-
-hashmap will look like this:
-
-```ts
-{ ProductController: [Function: router] { /* This router was registered by @Controller */ } }
-```

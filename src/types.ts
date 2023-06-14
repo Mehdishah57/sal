@@ -30,3 +30,22 @@ export interface ILazyPeople {
         property: string;
     }
 }
+
+export interface IRequestHandlerParams {
+    [key: string]: {
+        [key: string]: {
+            [key: string]: {
+                type: any;
+                marker: "@Body" | "@Req" | "@Res"
+            }
+        }
+    }
+}
+
+export interface ValidationError {
+    target: {new(...args:any[]):{}},
+    value: string;
+    property: string;
+    children: any[],
+    constraints: { [key: string]: string }
+  }
