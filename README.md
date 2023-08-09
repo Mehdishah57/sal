@@ -1,19 +1,16 @@
 This library aims to facilitate making express apps with dependency injection.
 Interface of this library is very simple and we aim to keep it close to express.
 
-To beign, you can create an express app just like you would do normally with an addition.
+To beign, you can import App decorator from sal-core and use it like this:
 
 ```ts
 import express from "express"
-import { container } from "sal-core"
+import { App } from "sal-core"
 
-const app = express()
-container.app = app; // This step is needed to use Controllers. However, it isn't needed for DI Injections.
+const PORT = process.env.PORT || 3500;
 
-/* controller imports should go here later */
-
-const PORT = process.env.PORT || 3600
-app.listen(PORT, () => console.log(`server at ${PORT}`))
+@App({ port: PORT })
+class TestApp {}
 ```
 
 This will get a basic app started over just like you do in express.
@@ -37,10 +34,13 @@ class UserController {
 export default UserController
 ```
 
-make sure to import this in main.app.ts like this
+make sure to import this in main app.ts and use it like this
 
 ```ts
-import "./user/user.controller"
+import UserController from "./user/user.controller";
+
+@App({ port: PORT, controllers: [UserController] })
+class TestApp {}
 ```
 
 isn't it awesome?
@@ -109,33 +109,25 @@ export default UserController
 For class-validators validations to work, you have to add validateOrReject method to to container like this:
 
 ```ts
-import express from "express"
 import { container } from "sal-core"
 import { validateOrReject } from "class-validator"
 
-const app = express()
-container.app = app;
 container.validate = validateOrReject
-
-/* controller imports should go here later */
-
-const PORT = process.env.PORT || 3600
-app.listen(PORT, () => console.log(`server at ${PORT}`))
 ```
 
 now you can perform validations in controllers via following decorator:
 ```ts
-    class LoginDto {
-        @IsString()
-        email: string;
-        @IsString()
-        password: string;
-    }
+class LoginDto {
+    @IsString()
+    email: string;
+    @IsString()
+    password: string;
+}
 
-    @PostMapping()
-    async test(@Body body: LoginDto) {
-        return { ...body, url: req?.url }
-    }
+@PostMapping()
+async test(@Body body: LoginDto) {
+    return { ...body, url: req?.url }
+}
 ```
 
 And yes, thats all you have to do, body will automatically be validated against LoginDto.
@@ -191,6 +183,7 @@ class Test {
 }
 ```
 
+[Deprecated]
 These are normal express middlewares and can have customized implementation as per your needs.
 To be straight forward, you can pass your existing middlewares to @Middleware decorator
 and apply it to either methods / controllers.
@@ -320,8 +313,3 @@ class UserRepository {
     // Use it as you like
 }
 ```
-
-## container.app
-
-App is the default express app, that you can supply to use @Controller, @Get, @Post, @Put, @Patch & @Delete
-as shown in example above.

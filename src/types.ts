@@ -4,8 +4,18 @@ export interface IClasses {
     [key: string]: Function;
 }
 
-export interface IRouters {
-    [key: string]: Router;
+export interface IControllers {
+    [key: string]: {
+        router: Router;
+        route: string;
+    }
+}
+
+export interface IApps {
+    [key: string]: {
+        port: number;
+        controllers: {new(...args:any[]):{}}[];
+    }
 }
 
 export interface IMiddleware {
@@ -48,4 +58,9 @@ export interface ValidationError {
     property: string;
     children: any[],
     constraints: { [key: string]: string }
-  }
+}
+
+export interface IApp {
+    port: number;
+    controllers?: {new(...args:any[]):{}}[];
+}

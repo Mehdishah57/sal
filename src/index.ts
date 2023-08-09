@@ -11,6 +11,7 @@ import ForbiddenException from './exceptions/ForbiddenException';
 import CustomException from './exceptions/CustomException';
 import { GetMapping, DeleteMapping, PatchMapping, PostMapping, PutMapping } from "./Route";
 import { Body, Req, Res } from './ParamDec';
+import App from './App';
 
 export {
     container,
@@ -31,5 +32,6 @@ export {
     PutMapping,
     Body,
     Req,
-    Res
+    Res,
+    App
 }

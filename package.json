@@ -1,11 +1,11 @@
 {
   "name": "sal-core",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "dev": "npx nodemon src/test.ts",
+    "dev": "npx nodemon src/user/main.ts",
     "build": "tsc",
     "prepare": "npm run build"
   },

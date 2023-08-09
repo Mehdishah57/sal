@@ -1,30 +1,13 @@
 import { Router } from "express"
 import { container } from "./main"
 import Component from "./Component"
-import { MiddlewareScope } from "./constants";
 
 const Controller = (route = "/") => <T extends {new(...args:any[]):{}}>(constructor: T) => {
     // Register constroller as a component
     Component(constructor);
 
-    // Register route for component
-    container.routers[constructor.name] = Router(); 
-
-    // Register route in express app
-    try {
-        container.app.use(
-            route, 
-            ...(container.middlewares?.[constructor.name]?.[MiddlewareScope.CONTROLLER]?.handlers?.map?.((handlers) =>  handlers) || []),
-            container.routers[constructor.name]
-        )
-    } catch (error) {
-        console.error(error)
-        throw new Error(`You must initialize container express app before using @Controller.
-        \ncont app = express();
-        \ncontainer.app = app;
-        \n{ here goes all your controller imports }
-        \nJust make sure to put controller imports after setting container.app = app;\n`)
-    }
+    // Add this controller to controllers
+    container.controllers[constructor.name] = { route, router: Router() }
 
     // Resgister all pending registration routes for controller if available
     if(!container.pendingRegisteration[constructor.name]?.length) return;
@@ -32,7 +15,7 @@ const Controller = (route = "/") => <T extends {new(...args:any[]):{}}>(construc
     container.pendingRegisteration[constructor.name].forEach(({ route, handlerName, method }) => {
         const middlewares = container.middlewares[constructor.name]?.[handlerName]?.handlers || []
         const injectablePropsForMethod = container.requestHandlerParams?.[constructor.name]?.[handlerName]
-        container.routers[constructor.name][method](route, ...middlewares, async(req, res, next) => {
+        container.controllers[constructor.name].router[method](route, ...middlewares, async(req, res, next) => {
             try {
                 let methodParams = [req, res, next]
                 if(injectablePropsForMethod) {
@@ -53,7 +36,6 @@ const Controller = (route = "/") => <T extends {new(...args:any[]):{}}>(construc
                     }
                 }
                 const data = await container.instances[constructor.name][handlerName]?.(...methodParams);
-                console.log(data)
                 if(data) res.status(200).send(data)
             } catch (error) {
                 try {
