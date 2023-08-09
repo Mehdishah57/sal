@@ -183,13 +183,12 @@ class Test {
 }
 ```
 
-[Deprecated]
 These are normal express middlewares and can have customized implementation as per your needs.
 To be straight forward, you can pass your existing middlewares to @Middleware decorator
 and apply it to either methods / controllers.
 For global middlwares, you can simple use 
 ```ts
-app.use(/* add middlewares to express app */)
+@App({ port: PORT, controllers: [UserController], middlewares: [express.json(), cors()] })
 ```
 
 # Circular Dependencies:

@@ -63,4 +63,5 @@ export interface ValidationError {
 export interface IApp {
     port: number;
     controllers?: {new(...args:any[]):{}}[];
+    middlewares?: any[];
 }

@@ -3,10 +3,11 @@ import { container } from "./main";
 import { IApp } from "./types";
 import express from "express"
 
-const App = ({ port, controllers }: IApp) => <T extends {new(...args:any[]):{}}>(constructor: T) => {
+const App = ({ port, controllers, middlewares }: IApp) => <T extends {new(...args:any[]):{}}>(constructor: T) => {
     const app = express()
 
     /* Attach Middlewares from outside */
+    middlewares?.forEach(middleware => app.use(middleware))
 
     controllers.forEach(controller => {
         const { route, router } = container.controllers[controller.name]
