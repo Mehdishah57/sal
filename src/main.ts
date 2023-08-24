@@ -9,8 +9,16 @@ class Container {
     public pendingRegisteration: IPendingRegisteration = {}
     public lazyPeople: ILazyPeople = {}
     public requestHandlerParams: IRequestHandlerParams = {}
-    public validate: any = (instance: any) => {}
+    private _validate: (...args: any[]) => Promise<any> = async() => {}
     public apps: IApps = {};
+
+    public get validate() {
+        return this._validate
+    }
+
+    public set validator(validate: (...args: any[]) => any) {
+        this._validate = validate
+    }
 
     public set<T extends {new(...args:any[]):{}}>(constructor: T, instance: Object) {
         this.classes[constructor.name] = constructor

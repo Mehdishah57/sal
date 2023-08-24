@@ -1,4 +1,5 @@
 import { RequestHandler, Router } from "express";
+import { ParamDecorators } from "./enums/constants";
 
 export interface IClasses {
     [key: string]: Function;
@@ -46,7 +47,7 @@ export interface IRequestHandlerParams {
         [key: string]: {
             [key: string]: {
                 type: any;
-                marker: "@Body" | "@Req" | "@Res"
+                marker: ParamDecorators
             }
         }
     }
@@ -64,4 +65,8 @@ export interface IApp {
     port: number;
     controllers?: {new(...args:any[]):{}}[];
     middlewares?: any[];
+}
+
+export interface MapOf<T> {
+    [key: string]: T;
 }

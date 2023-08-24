@@ -10,8 +10,9 @@ import UnauthorizedException from './exceptions/UnauthorizedException';
 import ForbiddenException from './exceptions/ForbiddenException';
 import CustomException from './exceptions/CustomException';
 import { GetMapping, DeleteMapping, PatchMapping, PostMapping, PutMapping } from "./Route";
-import { Body, Req, Res } from './ParamDec';
+import { Body, Req, Res, Query, Param } from './ParamDec';
 import App from './App';
+import setValidator from './methods/setValidator';
 
 export {
     container,
@@ -33,5 +34,8 @@ export {
     Body,
     Req,
     Res,
-    App
+    Query,
+    Param,
+    App,
+    setValidator,
 }

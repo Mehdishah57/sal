@@ -1,6 +1,7 @@
+import { ParamDecorators } from "./enums/constants";
 import { container } from "./main";
 
-const ParamDec = (marker: "@Body" | "@Req" | "@Res") => (target: Object, methodName: string, parameterIndex: number) => {
+const ParamDec = (marker: ParamDecorators) => (target: Object, methodName: string, parameterIndex: number) => {
     const type: any = Reflect.getOwnMetadata("design:paramtypes", target, methodName)?.[parameterIndex]
     if(!type) return;
 
@@ -21,6 +22,8 @@ const ParamDec = (marker: "@Body" | "@Req" | "@Res") => (target: Object, methodN
     }    
 }
 
-export const Body = ParamDec("@Body")
-export const Req = ParamDec("@Req")
-export const Res = ParamDec("@Res")
+export const Body = ParamDec(ParamDecorators.BODY)
+export const Req = ParamDec(ParamDecorators.REQ)
+export const Res = ParamDec(ParamDecorators.RES)
+export const Query = ParamDec(ParamDecorators.QUERY)
+export const Param = ParamDec(ParamDecorators.PARAMS)

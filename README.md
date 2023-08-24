@@ -104,16 +104,26 @@ class UserController {
 export default UserController
 ```
 
-# Validation using class-validator
+# Validation in sal-core
 
-For class-validators validations to work, you have to add validateOrReject method to to container like this:
+For validations to work, you have to add a validator to sal-core like this:
 
 ```ts
-import { container } from "sal-core"
+import { setValidator, setErrorAccessor } from "sal-core"
 import { validateOrReject } from "class-validator"
 
-container.validate = validateOrReject
+setValidator(validateOrReject)
+setErrorAccessor('error[].constraints[]')
 ```
+
+```ts setValidator``` function takes parameter function that can reject or resolve and ```ts setErrorAccessor```
+takes the property or properties of error object thrown, from which you get desired error message.
+
+For example 'class-validator' packages method validateOrReject throws error like 'error[index].constraints[index]' and 'yup'
+throws errors like 'error.errors[index]' while 'joi' goes like 'error.details[index].message' etc.
+
+So all of these strings are accessors i:e 'error[].constraints[]', 'error.errors[]' and 'error.details[].message'.
+And thats valid format of passing accessor (without index [index], just pass array as 'error[]');
 
 now you can perform validations in controllers via following decorator:
 ```ts
@@ -130,13 +140,29 @@ async test(@Body body: LoginDto) {
 }
 ```
 
-And yes, thats all you have to do, body will automatically be validated against LoginDto.
+or you can use yup like:
+
+```ts
+import { setErrorAccessor } from "sal-core"
+
+setErrorAccessor('error.errors[]')
+
+// in handler
+
+@PostMapping()
+async test(@Req req: Request) {
+    const validated = await schema.validate(req.body)
+    return { ...body, url: req?.url }
+}
+```
+
+And yes, thats all you have to do, body will automatically be validated against LoginDto or yup schema.
 for errors you'll get one error as below with 400 status code. 
 ```ts
 { message: string }
 ```
 
-Now you'll be thinking how will i access req & res objects in this handlers since that seem to be lost,
+Now you'll be thinking how will i access req & res objects in this handlers since that seems to be lost,
 We have following additonal decorators as well to manage it:
 
 1. Req (injects request object)

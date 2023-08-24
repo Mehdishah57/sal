@@ -1,4 +1,4 @@
-import { MiddlewareScope } from "./constants";
+import { MiddlewareScope } from "./enums/constants";
 import { container } from "./main";
 import { IApp } from "./types";
 import express from "express"
