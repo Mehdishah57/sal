@@ -109,21 +109,13 @@ export default UserController
 For validations to work, you have to add a validator to sal-core like this:
 
 ```ts
-import { setValidator, setErrorAccessor } from "sal-core"
+import { setValidator } from "sal-core"
 import { validateOrReject } from "class-validator"
 
 setValidator(validateOrReject)
-setErrorAccessor('error[].constraints[]')
 ```
 
-```ts setValidator``` function takes parameter function that can reject or resolve and ```ts setErrorAccessor```
-takes the property or properties of error object thrown, from which you get desired error message.
-
-For example 'class-validator' packages method validateOrReject throws error like 'error[index].constraints[index]' and 'yup'
-throws errors like 'error.errors[index]' while 'joi' goes like 'error.details[index].message' etc.
-
-So all of these strings are accessors i:e 'error[].constraints[]', 'error.errors[]' and 'error.details[].message'.
-And thats valid format of passing accessor (without index [index], just pass array as 'error[]');
+```ts setValidator``` function takes parameter function that can reject or resolve.
 
 now you can perform validations in controllers via following decorator:
 ```ts
