@@ -306,6 +306,20 @@ throw new CustomException("something was wrong", 400)
 
 The di-container exposes following properties. Try not to mess with them.
 
+## container.getApp()
+
+This method is used to retrieve server instance returned by app.listen method of
+express. If you've an app UserApp, you can get its server as:
+
+```ts
+@App({ port: ..., controllers: ... })
+class UserApp {}
+
+const server = container.getApp(UserApp);
+```
+
+Now you do different stuff i:e attaching socket.io with it etc.
+
 ## container.set - container.get
 
 This is a method that you can manually use to set an instance against a class,
@@ -319,6 +333,8 @@ const dataSource = new DataSoruce({ /* options go here */ })
 container.set(DataSource, dataSource);
 const dataSource = container.get(DataSource) // It will return the data source instance
 ```
+
+make sure to call container.set before importing Controllers for now.
 
 Now you can inject it like this:
 

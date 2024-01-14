@@ -12,6 +12,10 @@ class Container {
     private _validate: (...args: any[]) => Promise<any> = async() => {}
     public apps: IApps = {};
 
+    public getApp<T extends {new(...args:any[]):{}}>(constructor: T) {
+        return this.apps[constructor.name].server;
+    }
+
     public get validate() {
         return this._validate
     }

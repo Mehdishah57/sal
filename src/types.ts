@@ -1,5 +1,6 @@
 import { RequestHandler, Router } from "express";
 import { ParamDecorators } from "./enums/constants";
+import { IncomingMessage, Server, ServerResponse } from "http";
 
 export interface IClasses {
     [key: string]: Function;
@@ -16,6 +17,7 @@ export interface IApps {
     [key: string]: {
         port: number;
         controllers: {new(...args:any[]):{}}[];
+        server: Server<typeof IncomingMessage, typeof ServerResponse>
     }
 }
 
