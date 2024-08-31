@@ -20,12 +20,12 @@ but now, instead of doing that, all you have to do is import @Controller and map
 and make a controller like this:
 
 ```ts
-import { Controller, GetMapping } from "sal-core";
+import { Controller, Get } from "sal-core";
 import { Request, Response } from "express";
 
 @Controller("/api/user")
 class UserController {
-    @GetMapping("/:id")
+    @Get("/:id")
     public async getUser(req: Request, res: Response) {
         res.status(200).send({ id: 1, name: "sal" })   
     }
@@ -86,7 +86,7 @@ export default UserService
 
 user.controller.ts
 ```ts
-import { Controller, GetMapping } from "sal-core";
+import { Controller, Get } from "sal-core";
 import { Request, Response } from "express";
 import UserService from "./user.service";
 
@@ -94,7 +94,7 @@ import UserService from "./user.service";
 class UserController {
     constructor(private readonly userService: UserService) {}
 
-    @GetMapping("/:id")
+    @Get("/:id")
     public async getUser(req: Request, res: Response) {
         const user = await this.userService.getUser()
         res.status(200).send({ ...user, params: req.params, query: req.query })   
@@ -126,7 +126,7 @@ class LoginDto {
     password: string;
 }
 
-@PostMapping()
+@Post()
 async test(@Body body: LoginDto) {
     return { ...body, url: req?.url }
 }
@@ -141,7 +141,7 @@ setErrorAccessor('error.errors[]')
 
 // in handler
 
-@PostMapping()
+@Post()
 async test(@Req req: Request) {
     const validated = await schema.validate(req.body)
     return { ...body, url: req?.url }
@@ -192,7 +192,7 @@ const auth: RequestHandler = (req, res, next) => {
 class Test {
     constructor(private readonly userService: UserService) {}
 
-    @GetMapping("/")
+    @Get("/")
     @Middlewares(auth, permission)
     public async getUser(req: Request, res: Response) {
         const user = await this.userService.getUser()
