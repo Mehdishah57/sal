@@ -56,6 +56,7 @@ const Controller = (route = "/") => <T extends {new(...args:any[]):{}}>(construc
                     const { message, status } = JSON.parse(error.message)
                     res.status(status).send({ message })
                 } catch (error) {
+                    console.error(error)
                     res.status(500).send({ message: "Internal Server Error" })
                 }
             }
