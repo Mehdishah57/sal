@@ -9,7 +9,7 @@ import NotFoundException from './exceptions/NotFoundException';
 import UnauthorizedException from './exceptions/UnauthorizedException';
 import ForbiddenException from './exceptions/ForbiddenException';
 import CustomException from './exceptions/CustomException';
-import { GetMapping, DeleteMapping, PatchMapping, PostMapping, PutMapping } from "./Route";
+import { GetMapping, DeleteMapping, PatchMapping, PostMapping, PutMapping, Get, Put, Post, Patch, Delete } from "./Route";
 import { Body, Req, Res, Query, Param } from './ParamDec';
 import App from './App';
 import setValidator from './methods/setValidator';
@@ -38,4 +38,9 @@ export {
     Param,
     App,
     setValidator,
+    Get,
+    Put,
+    Post,
+    Patch,
+    Delete
 }
