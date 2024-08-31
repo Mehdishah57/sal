@@ -10,7 +10,7 @@ const App = ({ port, controllers, middlewares }: IApp) => <T extends {new(...arg
     middlewares?.forEach(middleware => app.use(middleware))
 
     /* Attach Middlewares applied to controllers */
-    controllers.forEach(controller => {
+    controllers?.forEach(controller => {
         const { route, router } = container.controllers[controller.name]
         const middlewares = container.middlewares?.[controller.name]?.[MiddlewareScope.CONTROLLER]?.handlers?.map?.((handlers) => handlers) || []
         app.use(route, ...middlewares, router)
