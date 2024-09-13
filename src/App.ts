@@ -1,23 +1,18 @@
-import { MiddlewareScope } from "./enums/constants"
+import ComponentScan from "./ComponentScan"
 import { container } from "./main"
 import { IApp } from "./types"
-import express from "express"
 
-const App = ({ port, controllers, middlewares }: IApp) => <T extends {new(...args:any[]):{}}>(constructor: T) => {
-    const app = express()
+const App = ({ port, middlewares, appRootPath = "src" }: IApp) => <T extends {new(...args:any[]):{}}>(constructor: T) => {
+    ComponentScan(appRootPath)(constructor)
 
     /* Attach Middlewares from outside */
-    middlewares?.forEach(middleware => app.use(middleware))
-
-    /* Attach Middlewares applied to controllers */
-    controllers?.forEach(controller => {
-        const { route, router } = container.controllers[controller.name]
-        const middlewares = container.middlewares?.[controller.name]?.[MiddlewareScope.CONTROLLER]?.handlers?.map?.((handlers) => handlers) || []
-        app.use(route, ...middlewares, router)
-    })
+    middlewares?.forEach(middleware => container.app.use(middleware))
     
-    const server = app.listen(port, () => console.log(`${constructor.name} started at ${port}`))
-    container.apps[constructor.name] = { port, controllers, server }
+    /* Starting Express application on given port */
+    const server = container.app.listen(port, () => console.log(`${constructor.name} started at ${port}`))
+
+    /* Saving useful properties in container for later access */
+    container.server = server
 }
 
 export default App

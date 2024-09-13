@@ -42,5 +42,5 @@ export {
     Put,
     Post,
     Patch,
-    Delete
+    Delete,
 }

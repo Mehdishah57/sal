@@ -1,16 +1,22 @@
 import { Router } from "express"
 import { container } from "./main"
 import Component from "./Component"
-import { ParamDecorators } from "./enums/constants";
+import { MiddlewareScope, ParamDecorators } from "./enums/constants";
 
 const Controller = (route = "/") => <T extends {new(...args:any[]):{}}>(constructor: T) => {
     // Register constroller as a component
     Component(constructor);
 
-    // Add this controller to controllers
+    // Add this controller to controller
     container.controllers[constructor.name] = { route, router: Router() }
 
-    // Resgister all pending registration routes for controller if available
+    /**
+     * Resgister all pending registration routes for controller if available
+     * Check method parameters for each Request Method inside controller
+     * Perform parameter injections as needed
+     * Perform validations as needed
+     * Add default error handling
+     */
     if(!container.pendingRegisteration[constructor.name]?.length) return;
     
     container.pendingRegisteration[constructor.name].forEach(({ route, handlerName, method }) => {
@@ -62,6 +68,16 @@ const Controller = (route = "/") => <T extends {new(...args:any[]):{}}>(construc
             }
         })
     })
+
+    /**
+     * Register this controller as an express route
+     * Attach Controller Scoped middlewares
+     * Attach controller router
+     */
+    if(container.app) {
+        const middlewares = container.middlewares?.[constructor.name]?.[MiddlewareScope.CONTROLLER]?.handlers?.map?.((handlers) => handlers) || []
+        container.app.use(route, ...middlewares, container.controllers[constructor.name]?.router)
+    }
 }
 
 export default Controller

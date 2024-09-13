@@ -16,7 +16,7 @@ class TestApp {}
 This will get a basic app started over just like you do in express.
 Now normally, you would create routers, and controllers in traditional way and register them
 but now, instead of doing that, all you have to do is import @Controller and mappings:
-@GetMapping, @PostMapping, @PutMapping, @PatchMapping, @DeleteMapping
+@Get, @Post, @Put, @Patch, @Delete
 and make a controller like this:
 
 ```ts
@@ -34,14 +34,15 @@ class UserController {
 export default UserController
 ```
 
-make sure to import this in main app.ts and use it like this
+By default, sal-core resolves all these files in `src` directory inside your project root
+If you've different structure, then you can specify it here like this:
 
 ```ts
-import UserController from "./user/user.controller";
-
-@App({ port: PORT, controllers: [UserController] })
-class TestApp {}
+@App({ port: ..., appRootPath: "app" })
 ```
+
+Please avoid using root as your appRootPath because otherwise it will start scanning node_modules
+that might take forever
 
 isn't it awesome?
 
@@ -206,7 +207,7 @@ To be straight forward, you can pass your existing middlewares to @Middleware de
 and apply it to either methods / controllers.
 For global middlwares, you can simple use 
 ```ts
-@App({ port: PORT, controllers: [UserController], middlewares: [express.json(), cors()] })
+@App({ port: PORT, middlewares: [express.json(), cors()] })
 ```
 
 # Circular Dependencies:
@@ -306,16 +307,27 @@ throw new CustomException("something was wrong", 400)
 
 The di-container exposes following properties. Try not to mess with them.
 
-## container.getApp()
+## Get Express app
+
+This is the API to access the standard express app instance
+
+```ts
+@App({ port: ... })
+class App {}
+
+const app = container.app
+```
+
+## Get Http Server instance of express app
 
 This method is used to retrieve server instance returned by app.listen method of
 express. If you've an app UserApp, you can get its server as:
 
 ```ts
-@App({ port: ..., controllers: ... })
-class UserApp {}
+@App({ port: ..., })
+class App {}
 
-const server = container.getApp(UserApp);
+const server = container.server;
 ```
 
 Now you do different stuff i:e attaching socket.io with it etc.

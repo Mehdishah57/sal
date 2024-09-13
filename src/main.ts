@@ -1,5 +1,6 @@
 import "reflect-metadata"
-import { IApps, IClasses, IControllers, ILazyPeople, IMiddleware, IPendingRegisteration, IRequestHandlerParams } from "./types"
+import express, { Express } from "express"
+import { IClasses, IControllers, ILazyPeople, IMiddleware, IPendingRegisteration, IRequestHandlerParams, IServerInstance } from "./types"
 
 class Container {
     public classes: IClasses = {}
@@ -10,10 +11,27 @@ class Container {
     public lazyPeople: ILazyPeople = {}
     public requestHandlerParams: IRequestHandlerParams = {}
     private _validate: (...args: any[]) => Promise<any> = async() => {}
-    public apps: IApps = {};
+    private _app: Express
+    private _server: IServerInstance
 
-    public getApp<T extends {new(...args:any[]):{}}>(constructor: T) {
-        return this.apps[constructor.name].server;
+    constructor() {
+        this._app = express()
+    }
+
+    public get app() {
+        return this._app
+    }
+
+    public set app(app: Express) {
+        this._app = app
+    }
+
+    public get server() {
+        return this._server
+    }
+
+    public set server(server: IServerInstance) {
+        this._server = server
     }
 
     public get validate() {

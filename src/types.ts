@@ -13,13 +13,7 @@ export interface IControllers {
     }
 }
 
-export interface IApps {
-    [key: string]: {
-        port: number;
-        controllers: {new(...args:any[]):{}}[];
-        server: Server<typeof IncomingMessage, typeof ServerResponse>
-    }
-}
+export interface IServerInstance extends Server<typeof IncomingMessage, typeof ServerResponse> {}
 
 export interface IMiddleware {
     [key: string]: {
@@ -67,6 +61,7 @@ export interface IApp {
     port: number;
     controllers?: {new(...args:any[]):{}}[];
     middlewares?: any[];
+    appRootPath?: string;
 }
 
 export interface MapOf<T> {
