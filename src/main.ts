@@ -43,8 +43,10 @@ class Container {
     }
 
     public set<T extends {new(...args:any[]):{}}>(constructor: T, instance: Object) {
-        this.classes[constructor.name] = constructor
-        this.instances[constructor.name] = instance
+        if((!this.classes[constructor.name] && !this.instances[constructor.name]) || !(instance instanceof constructor)) {
+            this.classes[constructor.name] = constructor
+            this.instances[constructor.name] = instance
+        }
     }
 
     public get<T>(classType: { new (): T }): T {
