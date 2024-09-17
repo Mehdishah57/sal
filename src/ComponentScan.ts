@@ -14,7 +14,7 @@ async function scanAndImport(dirPath: string, priorityImports: string[], seconda
         const modulePath = path.resolve(fullPath)
         const content = await fs.readFile(modulePath, "utf-8")
         if(content.includes("container.set")) priorityImports.push(modulePath)
-        else secondaryImports.push(modulePath)
+        else if(content.includes("@Controller(")) secondaryImports.push(modulePath)
       }
     }
   }
