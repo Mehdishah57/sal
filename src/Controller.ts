@@ -27,14 +27,22 @@ const Controller = (route = "/") => <T extends {new(...args:any[]):{}}>(construc
                 let methodParams = [req, res, next]
                 if(injectablePropsForMethod) {
                     methodParams = []
-                    // This is only for validating inputs against @Body decorator
+                    // This is only for validating inputs against @Body, @Params & @Query decorators
                     for(const [key, value] of Object.entries(injectablePropsForMethod)) {
                         const { type, marker } = value
                         if([ParamDecorators.BODY, ParamDecorators.PARAMS, ParamDecorators.QUERY].includes(marker)) {
                             const inst = new type()
+                            /**
+                             * Presence of schema property signals it's a Yup Schema
+                             */
                             if(inst?.schema) {
                                 await inst.schema.validate?.(req[marker])
                             }
+                            /**
+                             * Otherwise I'd assume you are using class-validator
+                             * Please make sure you set validation function i:e
+                             * setValidator(validateOrReject)
+                             */
                             if(!inst?.schema) {
                                 Object.keys(req[marker] || {}).forEach(key => {
                                     inst[key] = req[marker][key]
@@ -51,6 +59,15 @@ const Controller = (route = "/") => <T extends {new(...args:any[]):{}}>(construc
                 if(data) res.status(200).send(data)
             } catch (error) {
                 try {
+                    /* If error accessor is available, we use it parse raised error and send response back */
+                    const customError = container.errorAccessor?.(error)
+                    if(customError) return res.status(400).send(customError)
+
+                    /**
+                     * Legacy code for error handling
+                     * I am keeping it for the sake of people
+                     * Those who want things to be simple and ready made
+                     */
                     if(Array.isArray(error))
                         return res.status(400).send({ message: Object.values(error[0].constraints)[0] })
                     if(error?.errors?.length)

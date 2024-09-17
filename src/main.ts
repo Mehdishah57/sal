@@ -13,9 +13,18 @@ class Container {
     private _validate: (...args: any[]) => Promise<any> = async() => {}
     private _app: Express
     private _server: IServerInstance
+    private _errorAccessor: (...args: any[]) => any | undefined;
 
     constructor() {
         this._app = express()
+    }
+
+    public set errorAccessor(errorExtractor: (...args: any[]) => any) {
+        this._errorAccessor = errorExtractor
+    }
+
+    public get errorAccessor() {
+        return this._errorAccessor
     }
 
     public get app() {

@@ -13,7 +13,9 @@ async function scanAndImport(dirPath: string, priorityImports: string[], seconda
       else if (file.isFile() && /\.(ts|js)$/.test(file.name)) {
         const modulePath = path.resolve(fullPath)
         const content = await fs.readFile(modulePath, "utf-8")
-        if(content.includes("container.set")) priorityImports.push(modulePath)
+        const priorityCodeContents = ["container.set", "setValidator", "setErrorAccessor"]
+        const isPriority = priorityCodeContents.some(priorityCode => content.includes(priorityCode))
+        if(isPriority) priorityImports.push(modulePath)
         else if(content.includes("@Controller(")) secondaryImports.push(modulePath)
       }
     }

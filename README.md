@@ -107,7 +107,7 @@ export default UserController
 
 # Validation in sal-core
 
-For validations to work, you have to add a validator to sal-core like this:
+For validations to work against @Body, @Param or @Query, you have to add a validator to sal-core like this:
 
 ```ts
 import { setValidator } from "sal-core"
@@ -133,12 +133,29 @@ async test(@Body body: LoginDto) {
 }
 ```
 
-or you can use yup like:
+# Customize error response:
+
+Let's imagine, you want to customize the error object returned as response, then you can
+use setErrorAccessor method
+
+This ```ts setErrorAccessor``` function takes a callback function.
+sal-core will automatically pass thrown error to this callback function at runtime
+and send back value returned by this function as response to user
+
+Here's how you can define an error accessor function
+```ts
+/* Feel free to name it after your pet or your wife if any */
+function parseError(error: any) {
+    return error?.details?.whatever
+}
+```
+
+Now set it like this:
 
 ```ts
 import { setErrorAccessor } from "sal-core"
 
-setErrorAccessor('error.errors[]')
+setErrorAccessor(parseError)
 
 // in handler
 
@@ -150,10 +167,7 @@ async test(@Req req: Request) {
 ```
 
 And yes, thats all you have to do, body will automatically be validated against LoginDto or yup schema.
-for errors you'll get one error as below with 400 status code. 
-```ts
-{ message: string }
-```
+for errors you'll get returned value of your function parseError with 400 status code. 
 
 Now you'll be thinking how will i access req & res objects in this handlers since that seems to be lost,
 We have following additonal decorators as well to manage it:

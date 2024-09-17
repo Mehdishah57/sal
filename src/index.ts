@@ -13,6 +13,7 @@ import { GetMapping, DeleteMapping, PatchMapping, PostMapping, PutMapping, Get, 
 import { Body, Req, Res, Query, Param } from './ParamDec';
 import App from './App';
 import setValidator from './methods/setValidator';
+import { setErrorAccessor } from "./methods/setErrorAccessor";
 
 export {
     container,
@@ -38,6 +39,7 @@ export {
     Param,
     App,
     setValidator,
+    setErrorAccessor,
     Get,
     Put,
     Post,
