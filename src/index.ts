@@ -14,12 +14,14 @@ import { Body, Req, Res, Query, Param } from './ParamDec';
 import App from './App';
 import setValidator from './methods/setValidator';
 import { setErrorAccessor } from "./methods/setErrorAccessor";
+import Service from "./Service";
 
 export {
     container,
     Autowired,
     Controller,
     Component,
+    Service,
     Middlewares,
     Lazy,
     BadRequestException,
