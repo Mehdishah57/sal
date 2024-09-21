@@ -16,7 +16,9 @@ async function scanAndImport(dirPath: string, priorityImports: string[], seconda
         const priorityCodeContents = ["container.set", "setValidator", "setErrorAccessor"]
         const isPriority = priorityCodeContents.some(priorityCode => content.includes(priorityCode))
         if(isPriority) priorityImports.push(modulePath)
-        else if(content.includes("@Controller(")) secondaryImports.push(modulePath)
+        const secondaryCodeContents = ["@Controller(", "@Component", "@Service"]
+        const isSecondary = secondaryCodeContents.some(secondaryCode => content.includes(secondaryCode))
+        if(isSecondary) secondaryImports.push(modulePath)
       }
     }
   }
