@@ -2,7 +2,12 @@ import ComponentScan from "./ComponentScan"
 import { container } from "./main"
 import { IApp } from "./types"
 
-const App = ({ port, middlewares, appRootPath = "src" }: IApp) => <T extends {new(...args:any[]):{}}>(constructor: T) => {
+const App = ({ port, middlewares, appRootPath }: IApp) => <T extends {new(...args:any[]):{}}>(constructor: T) => {
+    /** Scan Environment */
+    const NODE_ENV = process.env.NODE_ENV
+    if(!appRootPath)
+        appRootPath = NODE_ENV === "production" ? "dist" : "src"
+
     ComponentScan(appRootPath)(constructor)
 
     /* Attach Middlewares from outside */
