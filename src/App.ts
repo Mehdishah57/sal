@@ -3,11 +3,14 @@ import { container } from "./main"
 import { IApp } from "./types"
 
 const App = ({ port, middlewares, appRootPath }: IApp) => <T extends {new(...args:any[]):{}}>(constructor: T) => {
-    /** Scan Environment */
-    const NODE_ENV = process.env.NODE_ENV
+    /** Check app environment */
+    const NODE_ENV = process.env.NODE_ENV?.trim()
+    
+    /** Set default directory based on environment if not specified */
     if(!appRootPath)
         appRootPath = NODE_ENV === "production" ? "dist" : "src"
 
+    /** Run a component scan in directories */
     ComponentScan(appRootPath)(constructor)
 
     /* Attach Middlewares from outside */
