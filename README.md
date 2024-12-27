@@ -360,8 +360,6 @@ container.set(DataSource, dataSource);
 const dataSource = container.get(DataSource) // It will return the data source instance
 ```
 
-make sure to call container.set before importing Controllers for now.
-
 Now you can inject it like this:
 
 ```ts
